@@ -4,6 +4,9 @@ import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
 import cors from "cors";
+import { prisma } from "./database/index.js";
+// import { AIService } from "./modules/ai/providers/mistral/MistralProvider.js";
+import { ChatService } from "./modules/chat/ChatService.js";
 
 // expres app
 const app = express();
@@ -21,11 +24,29 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/health", (req, res) => {
-  res.json({
-    success: true,
-    message: "AI Chat Server Running 🚀",
-  });
+// const aiService = new AIService();
+const chatService = new ChatService();
+
+app.post("/test/ai", async (req, res) => {
+  try {
+    const { chatId, userContent } = req.body;
+
+    const response = await chatService.generateResponse(chatId, userContent);
+
+    console.log("🤖 AI:", response);
+
+    res.json({
+      success: true,
+      data: response,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "AI request failed",
+    });
+  }
 });
 // app.use()
 
