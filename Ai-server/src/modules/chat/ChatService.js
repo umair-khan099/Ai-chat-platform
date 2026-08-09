@@ -1,23 +1,25 @@
-import { MessageRepository } from "../../repositories/message/MessageRepository.js";
-import { AIService } from "../ai/providers/mistral/MistralProvider.js";
-import { mapToLangChainMessages } from "../MessageMapper.js";
-import { HumanMessage } from "@langchain/core/messages";
+import { ChatRepository } from "../../repositories/chat/ChatRepository.js";
 
 export class ChatService {
   constructor() {
-    this.messageRepository = new MessageRepository();
-    this.aiService = new AIService();
+    this.chatRepository = new ChatRepository();
   }
 
-  async generateResponse(chatId, userContent) {
-    // 1. Existing conversation history
-    const history = await this.messageRepository.findByChatId(chatId);
+  async createChat(title) {
+    return this.chatRepository.create({ title });
+  }
 
-    // 2. Convert DB messages to LangChain messages
-    const messages = mapToLangChainMessages(history);
+  async getOrCreateChat(chatId, title) {
+    if (chatId) {
+      const chat = await this.chatRepository.findById(chatId);
 
-    messages.push(new HumanMessage(userContent));
-    // 4. Send complete conversation to AI
-    const response = await this.aiService.generate(messages);
+      if (!chat) {
+        throw new Error("Chat not found");
+      }
+
+      return chat;
+    }
+
+    return this.createChat(title);
   }
 }
