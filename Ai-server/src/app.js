@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 import messageRoutes from "./routes/message.routes.js";
 
-app.use("/api/messages", messageRoutes);
+app.use("/api/v1", messageRoutes);
 // app.use()
 
 export default app;

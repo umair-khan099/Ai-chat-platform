@@ -5,7 +5,8 @@ export class MessageController {
 
   sendMessage = async (req, res) => {
     try {
-      const { chatId, content } = req.body;
+      const { content } = req.body;
+      const { chatId } = req.params;
 
       if (!content || !content.trim()) {
         return res.status(400).json({
@@ -16,7 +17,7 @@ export class MessageController {
 
       const result = await this.messageService.generateResponse(
         chatId,
-        content.trim()
+        content.trim(),
       );
 
       return res.status(200).json({

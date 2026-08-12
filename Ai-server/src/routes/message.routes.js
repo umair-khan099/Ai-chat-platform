@@ -7,6 +7,8 @@ const router = express.Router();
 const messageService = new MessageService();
 const messageController = new MessageController(messageService);
 
-router.post("/", messageController.sendMessage);
+// router.post("/message/:chat", messageController.sendMessage);
+router.post("/message", messageController.sendMessage);
+router.post("/message/:chatId", messageController.sendMessage); 
 
 export default router;
