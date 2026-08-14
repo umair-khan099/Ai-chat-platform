@@ -1,4 +1,9 @@
 import { useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+
+import "highlight.js/styles/github.css";
 
 const MessageList = ({ messages = [], isLoading, isError }) => {
   const bottomRef = useRef(null);
@@ -44,7 +49,12 @@ const MessageList = ({ messages = [], isLoading, isError }) => {
                   : "max-w-[80%] px-1 py-2 text-sm leading-7 text-slate-700"
               }
             >
-              {message.content}
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeHighlight]}
+              >
+                {message.content}
+              </ReactMarkdown>
             </div>
           </div>
         ))}
