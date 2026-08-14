@@ -1,16 +1,28 @@
 import { useState } from "react";
 
-const MessageComposer = () => {
+const MessageComposer = ({ onSend, isLoading }) => {
   const [content, setContent] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!content.trim()) return;
+    const trimmedContent = content.trim();
 
-    console.log("Message:", content);
+    if (!trimmedContent || isLoading) return;
 
-    setContent("");
+    try {
+      await onSend(trimmedContent);
+      setContent("");
+    } catch (error) {
+      console.error("Message send failed:", error);
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleSubmit(event);
+    }
   };
 
   return (
@@ -31,8 +43,10 @@ const MessageComposer = () => {
         <textarea
           value={content}
           onChange={(event) => setContent(event.target.value)}
-          placeholder="Ask anything..."
+          onKeyDown={handleKeyDown}
+          placeholder={isLoading ? "AI is thinking..." : "Ask anything..."}
           rows={1}
+          disabled={isLoading}
           className="
             min-h-14 w-full
             resize-none
@@ -43,6 +57,8 @@ const MessageComposer = () => {
             text-slate-700
             outline-none
             placeholder:text-slate-400
+            disabled:cursor-not-allowed
+            disabled:opacity-60
           "
         />
 
@@ -52,6 +68,7 @@ const MessageComposer = () => {
           <div className="flex items-center gap-2">
             <button
               type="button"
+              disabled={isLoading}
               className="
                 flex size-8 items-center justify-center
                 rounded-lg
@@ -59,6 +76,8 @@ const MessageComposer = () => {
                 transition
                 hover:bg-white/60
                 hover:text-slate-700
+                disabled:cursor-not-allowed
+                disabled:opacity-50
               "
               aria-label="Attach file"
             >
@@ -83,7 +102,7 @@ const MessageComposer = () => {
           {/* Send */}
           <button
             type="submit"
-            disabled={!content.trim()}
+            disabled={!content.trim() || isLoading}
             className="
               flex size-9 items-center justify-center
               rounded-xl
@@ -99,7 +118,7 @@ const MessageComposer = () => {
             "
             aria-label="Send message"
           >
-            ↑
+            {isLoading ? "..." : "↑"}
           </button>
         </div>
       </form>
@@ -112,4 +131,3 @@ const MessageComposer = () => {
 };
 
 export default MessageComposer;
-    

@@ -5,10 +5,12 @@ export class ChatService {
     this.chatRepository = new ChatRepository();
   }
 
+  // create new chat 
   async createChat(title) {
     return this.chatRepository.create({ title });
   }
 
+  // core feature create chat if chat allready created just start conversesion 
   async getOrCreateChat(chatId, title) {
     if (chatId) {
       const chat = await this.chatRepository.findById(chatId);
@@ -21,5 +23,15 @@ export class ChatService {
     }
 
     return this.createChat(title);
+  }
+
+  // get all chats of an user 
+  async getChats() {
+    return this.chatRepository.findAll();
+  }
+
+  // fetching chats based on there id ( give's only one)
+  async getChatById(chatId) {
+    return this.chatRepository.findById(chatId);
   }
 }

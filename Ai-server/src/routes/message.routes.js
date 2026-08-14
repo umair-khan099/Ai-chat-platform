@@ -9,6 +9,7 @@ const messageController = new MessageController(messageService);
 
 // router.post("/message/:chat", messageController.sendMessage);
 router.post("/message", messageController.sendMessage);
-router.post("/message/:chatId", messageController.sendMessage); 
+router.post("/message/:chatId", messageController.sendMessage);
+router.get("/chats/:chatId/messages", messageController.getMessagesByChatId);
 
 export default router;

@@ -22,6 +22,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 import messageRoutes from "./routes/message.routes.js";
+import chatRoutes from "./routes/chat.routes.js";
+app.use("/api/v1", chatRoutes);
 
 app.use("/api/v1", messageRoutes);
 // app.use()

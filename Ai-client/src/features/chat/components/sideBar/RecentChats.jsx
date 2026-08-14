@@ -1,97 +1,36 @@
-import React from "react";
-
-const recentChats = [
-  {
-    id: "1",
-    title: "Understanding LangChain Memory",
-  },
-  {
-    id: "2",
-    title: "PostgreSQL Database Design",
-  },
-  {
-    id: "3",
-    title: "How LLMs Actually Work",
-  },
-  {
-    id: "4",
-    title: "MERN System Architecture",
-  },
-  {
-    id: "5",
-    title: "Building an AI Chat Application",
-  },
-  {
-    id: "6",
-    title: "Prompt Engineering Basics",
-  },
-  {
-    id: "5",
-    title: "Building an AI Chat Application",
-  },
-  {
-    id: "6",
-    title: "Prompt Engineering Basics",
-  },
-  {
-    id: "5",
-    title: "Building an AI Chat Application",
-  },
-  {
-    id: "6",
-    title: "Prompt Engineering Basics",
-  },
-  {
-    id: "5",
-    title: "Building an AI Chat Application",
-  },
-  {
-    id: "6",
-    title: "Prompt Engineering Basics",
-  },
-  {
-    id: "5",
-    title: "Building an AI Chat Application",
-  },
-  {
-    id: "6",
-    title: "Prompt Engineering Basics",
-  },
-  {
-    id: "5",
-    title: "Building an AI Chat Application",
-  },
-  {
-    id: "6",
-    title: "Prompt Engineering Basics",
-  },
-  {
-    id: "5",
-    title: "Building an AI Chat Application",
-  },
-  {
-    id: "6",
-    title: "Prompt Engineering Basics",
-  },
-  {
-    id: "5",
-    title: "Building an AI Chat Application",
-  },
-  {
-    id: "6",
-    title: "Prompt Engineering Basics",
-  },
-  {
-    id: "5",
-    title: "Building an AI Chat Application",
-  },
-  {
-    id: "6",
-    title: "Prompt Engineering Basics",
-  },
-];
+import { useChats } from "../../hooks/useChats";
+import { useNavigate } from "react-router-dom";
 
 const RecentChats = () => {
+  const { data: chats = [], isLoading, isError } = useChats();
+  const navigate = useNavigate();
+
+  if (isLoading) {
+    return (
+      <section className="mt-5">
+        <h2 className="px-3 text-[11px] font-medium uppercase tracking-wider text-slate-400">
+          Recent
+        </h2>
+
+        <div className="mt-2 px-3 text-xs text-slate-400">Loading chats...</div>
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <section className="mt-5">
+        <h2 className="px-3 text-[11px] font-medium uppercase tracking-wider text-slate-400">
+          Recent
+        </h2>
+
+        <div className="mt-2 px-3 text-xs text-red-400">
+          Failed to load chats
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="mt-5">
       <h2 className="px-3 text-[11px] font-medium uppercase tracking-wider text-slate-400">
@@ -99,22 +38,25 @@ const RecentChats = () => {
       </h2>
 
       <div className="mt-2 space-y-0.5">
-        {recentChats.map((chat) => (
+        {chats.map((chat) => (
           <button
             key={chat.id}
+            onClick={() => navigate(`/playground/${chat.id}`)}
             type="button"
             className="
               group flex w-full items-center
               rounded-lg
               px-3 py-2
-              text-left
-              text-sm text-slate-600
+              text-left text-sm
+              text-slate-600
               transition-all duration-150
               hover:bg-white/50
               hover:text-slate-900
             "
           >
-            <span className="min-w-0 flex-1 truncate">{chat.title}</span>
+            <span className="min-w-0 flex-1 truncate">
+              {chat.title || "New Chat"}
+            </span>
 
             <span
               className="

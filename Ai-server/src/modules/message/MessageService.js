@@ -52,4 +52,14 @@ export class MessageService {
       assistantMessage,
     };
   }
+
+  async getMessagesByChatId(chatId) {
+    const chat = await this.chatService.getChatById(chatId);
+
+    if (!chat) {
+      throw new Error("Chat not found");
+    }
+
+    return this.messageRepository.findByChatId(chatId);
+  }
 }
