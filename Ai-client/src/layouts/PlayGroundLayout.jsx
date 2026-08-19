@@ -1,19 +1,14 @@
 import { useState } from "react";
 import Sidebar from "../features/chat/components/sideBar/Sidebar";
 import ChatWindow from "../features/chat/components/chatWindow/ChatWindow";
-import { useChatMessages } from "../features/chat/hooks/useChatMessages";
-import { useParams } from "react-router-dom";
 
 const PlayGroundLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { chatId } = useParams();
-  // console.log(chatId);
-  const { data: messages = [], isLoading, isError } = useChatMessages(chatId);
 
   return (
     <main className="h-dvh w-full overflow-hidden bg-slate-50">
       <div className="relative flex h-full w-full">
-        {/* // Mobile Overlay */}
+        {/* Mobile Overlay */}
         {isSidebarOpen && (
           <button
             type="button"
@@ -27,6 +22,7 @@ const PlayGroundLayout = () => {
             "
           />
         )}
+
         {/* Sidebar */}
         <aside
           className={`
@@ -53,23 +49,20 @@ const PlayGroundLayout = () => {
             <Sidebar onClose={() => setIsSidebarOpen(false)} />
           </div>
         </aside>
+
         {/* Chat */}
         <section
-          className={`
+          className="
             h-full min-w-0 flex-1
             transition-[width] duration-300
-          `}
+          "
         >
           <ChatWindow
             onOpenSidebar={() => setIsSidebarOpen(true)}
             isSidebarOpen={isSidebarOpen}
-            chatId={chatId}
-            messages={messages}
-            isLoading={isLoading}
-            isError={isError}
           />
         </section>
-      </div>
+      </div>  
     </main>
   );
 };
